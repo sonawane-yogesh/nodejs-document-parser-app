@@ -6,6 +6,9 @@ var fs = require('fs');
 var multiparty = require("multiparty");
 
 const pdfExtractor = require("../adaptors/pdf-extractor");
+const textExtractor = require("../adaptors/text-js-extractor");
+const xlsxExtractor = require("../adaptors/xlsx-extractor");
+const csvExtractor = require('../adaptors/csv-extractor');
 
 var uploadToProcess = function (httpRequest, httpResponse) {
     var dirPath = path.join(__dirname, "../UploadedFiles");
@@ -36,12 +39,21 @@ var uploadToProcess = function (httpRequest, httpResponse) {
 };
 
 var extractTextContent = async function (fileName, fileDetails) {
-    console.log(fileName);
-    if (options.type === "pdf") {
+    var regex = /(?:\.([^.]+))?$/;
+    var extension = regex.exec(fileDetails.uploadedFileName)[1].toLowerCase();
+    if (extension === "pdf") {
         return await pdfExtractor.extractPdf(fileDetails);
     }
-    if (options.type === "docx") {
-        return;
+    if (extension === 'txt') {
+        return await textExtractor.extractText(fileDetails);
+    }
+    if (extension === "xls" || extension === "xlsx") {
+        return await xlsxExtractor.extractXlsx(fileDetails);
+    }
+    if (extension === "csv") {
+        return await csvExtractor.extractCsv(fileDetails);
+    } else {
+        return "Invalid Extension";
     }
 };
 module.exports = {

@@ -1,3 +1,4 @@
+console.clear();
 var express = require('express');
 var app = express();
 var expressPath = require('express-path');
@@ -16,7 +17,7 @@ app.use(bodyParser.urlencoded({
 }));
 expressPath(app, appRoutes);
 
-var port = process.env.PORT || 3004;
+var port = process.env.PORT || 3001;
 app.listen(port, "127.0.0.1", () => {
     console.log("===============================================");
     console.log(`Document Parser Server running on port ${port}`);

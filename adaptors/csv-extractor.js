@@ -1,9 +1,8 @@
-var fs = require('fs');
 var path = require('path');
-
-exports.extractText = (fileDetails) => new Promise((resolve, reject) => {
+var csv = require('node-csv').createParser('\t', '"', '\\');
+exports.extractCsv = (fileDetails) => new Promise((resove, reject) => {
     var filePath = path.join(__dirname, "../", fileDetails.uploadedFileName);
-    fs.readFile(filePath, 'utf8', function (err, data) {
+    csv.parseFile(filePath, function (err, data) {
         if (err)
             reject(err);
         else
